@@ -1,0 +1,201 @@
+//user
+enum user_type [color:blue] {
+  ADMIN ADMIN
+  OFFICE_HEAD OFFICE_HEAD
+  TRANSACTION_MANAGER TRANSACTION_MANAGER
+  BUSINESS_DEVELOPMENT_MANAGER BUSINESS_DEVELOPMENT_MANAGER
+  DATA_MANAGER DATA_MANAGER
+  DATA_SURVEYOR DATA_SURVEYOR
+  CUSTOMER CUSTOMER
+}
+
+enum user_status [color:blue] {
+  UNDER_REVIEW UNDER_REVIEW
+  ACTIVE ACTIVE
+  SUSPENDED SUSPENDED
+}
+
+users [color:green] {
+  id string pk
+  email string unique
+  first_name string not null
+  last_name string
+  password_hash string
+  phone string
+  secondary_phone string
+  linked_in_url string
+  company_name string
+  designation string
+  user_type user_type
+  user_status user_status
+  created_at timestamp
+  updated_at timestamp
+  last_login timestamp
+}
+
+//property
+enum property_type [color:blue] {
+  OFFICE_SPACE OFFICE_SPACE
+  RETAIL RETAIL
+  LAND LAND
+  LOGISTICS_AND_INDUSTRIALS LOGISTICS_AND_INDUSTRIALS
+}
+
+properties [color:green]{
+  id string pk
+  property_name string
+  city_id int fk
+  location_id int fk
+  sublocation_id int fk
+  address_line1 string
+  address_line2 string
+  latitude string
+  longitude string
+  google_map_url string
+  property_type property_type
+}
+
+cities [color:green]{
+  id int pk
+  name string
+  short_name string
+  state_name string
+}
+
+locations [color:green]{
+  id int
+  name string
+  city_id int fk
+  city_division_name string
+  location_type_business string
+}
+
+sublocations [color:green]{
+  id int
+  name string
+  location_id int fk
+}
+
+building_detail [color:green]{
+  id string
+  name string
+  total_floors string
+  total_building_area string
+  building_area_unit string
+  typical_floor_size string
+  typical_floor_size_unit string
+  power_backup string
+  property_id string pk
+  column_grid string
+  floor_height string
+  live_floor_load string
+  dead_floor_load string
+  cafeterai_availability bool
+  cafeteria_capacity string
+  cafeteria_floor string
+  cafeteria_capacity_unit string
+  cam_charges string
+  cam_vendor string
+  elevator_details elevator_details
+  fire_noc string
+  ocuupancy_certificate string
+  building_construction_status string
+  hvac_system string
+  four_wheeler_parking_type string
+  facade string
+  fire_system string
+  no_of_fire_exits int
+  destination_controlled_lift string
+  building_certification building_certifications
+  building_completion_year int
+}
+
+enum elevator_details{
+  elevator_count int
+  elevator_make string
+  elevator_type string
+}
+
+enum building_certifications{
+    id int
+    name string
+    description string
+}
+
+unit_details [color:green]{
+    id string
+    name string
+
+    // service Core Details
+    male_washroom_count int
+    male_washroom_type string
+    female_washroom_count int
+    female_washroom_type string
+    handicap_washroom_count int
+    handicap_washroom_type string
+    ahu_room_count int
+
+    // offered space Details
+    chargeable_area int
+    chargeable_area_unit string
+    carpet_area int
+    carpet_area_unit string
+    efficiency int
+    efficiency_unit string
+    floor string
+    interior_status string
+    available_date date
+    can_unit_be_combined string
+    can_unit_be_divided string
+    combination string
+    availability_status string
+    availability_last_updated timestamp
+    unit_allotted_parking string
+    parking_ratio string
+    bike_common_parking string
+
+    //commercial Details
+    rental string
+    rental_unit string
+    security_deposit string
+    security_deposit_unit string
+    escalation_per_year string
+    stamp_duty_reg_chrg_type string
+    rent_free_period string
+    rent_free_period_unit string
+    lockin_period string
+    lockin_period_unit string
+    notice_period string
+    notice_period_unit string
+    new_fit_out_rental string
+    new_fit_out_rental_unit string
+    sanction_type string
+}
+
+tenant_details [color:green] {
+    id string
+    name string
+    primary_sector string
+    description string
+}
+
+contact_details [color:green] {
+    contact_type string
+    name string
+    mobile_number string
+    alternate_mobile_number string
+    email string
+    alternate_email string
+}
+
+//relations
+properties - cities
+properties - locations
+properties - sublocations
+
+unit_details < contact_details
+
+tenant_details < contact_details
+
+cities < locations
+locations < sublocations

@@ -1,0 +1,496 @@
+Commercial Real Estate Platform – Architecture & Data Modeling Brief
+1. Objective
+
+We are building a commercial real estate platform that will support both public property discovery and internal brokerage operations.
+
+The primary objective is to design a robust, scalable, and extensible backend architecture and database model that can power a modern proptech platform operating across multiple commercial real estate verticals.
+
+The system must:
+
+support diverse property asset types
+
+support multiple commercial transaction models
+
+scale to large datasets
+
+integrate with external CRM systems
+
+remain maintainable for long-term evolution
+
+We are seeking architectural guidance similar to what would be expected from a senior enterprise software architect designing a large proptech platform.
+
+The most important goal is to design a clean domain model and database structure that balances flexibility, performance, and maintainability.
+
+2. Business Context
+
+Our company operates in the commercial real estate advisory and brokerage industry.
+
+We help businesses discover, evaluate, lease, purchase, and invest in commercial real estate assets.
+
+The platform we are building will serve as the core digital infrastructure supporting:
+
+property discovery
+
+deal management
+
+advisor workflows
+
+documentation management
+
+property analytics
+
+client relationship management integration
+
+The platform will eventually support advanced analytics and AI-based recommendations.
+
+3. Business Verticals
+
+The platform must support multiple commercial real estate verticals including:
+
+Office Space
+
+Traditional enterprise office leasing and purchase.
+
+Shared Office / Coworking
+
+Flexible workspace environments including:
+
+hot desks
+
+dedicated desks
+
+private cabins
+
+managed enterprise spaces
+
+Retail Space
+
+Retail stores in malls, shopping centers, and high street locations.
+
+Industrial Space
+
+Manufacturing and industrial units.
+
+Logistics Space
+
+Warehouses, distribution centers, and logistics parks.
+
+Land Deals
+
+Commercial land parcels for development.
+
+Investment Assets
+
+Commercial real estate offered for investment.
+
+Future investment products may include:
+
+fractional ownership
+
+portfolio investments
+
+REIT-like structures
+
+4. Commercial Offering Complexity
+
+A key domain complexity in commercial real estate is the separation between the physical asset and the commercial transaction model.
+
+The same asset may simultaneously support multiple commercial offerings.
+
+Examples include:
+
+leasing
+
+outright sale
+
+investment opportunities
+
+managed office offerings
+
+For example:
+
+A commercial space may be:
+
+available for lease
+
+available for sale
+
+available for investment participation
+
+The data model must support multiple simultaneous offerings tied to the same asset without duplicating core asset information.
+
+5. Property Attribute Diversity
+
+Different real estate verticals require very different attribute sets.
+
+Examples include:
+
+Office assets may require attributes such as:
+
+workstation capacity
+
+cabin count
+
+meeting rooms
+
+floor plate size
+
+IT infrastructure
+
+security features
+
+Retail assets may require:
+
+storefront width
+
+mall positioning
+
+footfall metrics
+
+visibility score
+
+anchor tenant proximity
+
+Industrial assets may require:
+
+floor load capacity
+
+clear height
+
+crane capacity
+
+power availability
+
+Logistics assets may require:
+
+dock levelers
+
+truck turning radius
+
+warehouse height
+
+temperature control
+
+Shared office spaces may require:
+
+hot desk counts
+
+dedicated desk counts
+
+meeting room availability
+
+community services
+
+membership plans
+
+The architecture must address the challenge of modeling highly diverse attribute sets while maintaining strong data integrity and efficient queries.
+
+6. Business Workflows
+
+The platform will support multiple operational workflows.
+
+Property Discovery
+
+End users must be able to:
+
+browse commercial properties
+
+filter by location
+
+filter by asset type
+
+filter by size and pricing
+
+shortlist properties
+
+compare options
+
+Advisor Operations
+
+Internal advisors will use the system to:
+
+manage property inventory
+
+manage client requirements
+
+track deals
+
+recommend properties to clients
+
+Site Visits
+
+The system must support:
+
+scheduling site visits
+
+linking visits to properties
+
+assigning advisors
+
+capturing visit feedback
+
+Documentation
+
+The platform must support document management for:
+
+property documents
+
+marketing materials
+
+legal documents
+
+floor plans
+
+deal documentation
+
+7. CRM Integration
+
+Our company currently uses Zoho CRM for managing leads and customer relationships.
+
+The backend platform must integrate with Zoho CRM to synchronize data such as:
+
+leads
+
+contacts
+
+deals
+
+client communication
+
+Integration requirements include:
+
+receiving webhook events from Zoho
+
+triggering API calls to Zoho
+
+syncing deal data between systems
+
+associating CRM deals with property data
+
+The architecture should consider data synchronization patterns, eventual consistency, and failure handling.
+
+8. Future Analytics and Intelligence
+
+The system will eventually power analytics and machine learning features.
+
+These may include:
+
+identifying clusters of clients within buildings
+
+analyzing tenant industry distribution
+
+recommending expansion locations
+
+suggesting nearby properties for growing companies
+
+generating property heat maps
+
+The data model should allow future analytics capabilities without major redesign.
+
+9. Technology Stack
+
+The platform uses the following stack.
+
+Frontend Applications
+
+Customer Application
+Built with:
+
+Next.js
+
+Employee Application
+Built with:
+
+Next.js
+
+Backend
+
+Unified backend API built with:
+
+FastAPI (Python)
+
+Database
+
+Primary database:
+
+MySQL
+
+Infrastructure
+
+The platform is containerized using:
+
+Docker
+
+The services are deployed on Google Cloud managed container infrastructure.
+
+The architecture should assume:
+
+containerized services
+
+horizontal scalability
+
+cloud-native deployment
+
+10. Core Architecture Requirements
+
+The system must prioritize the following architectural goals.
+
+Scalability
+
+The system should support growth to:
+
+thousands of properties
+
+large asset inventories
+
+high query volumes
+
+large CRM datasets
+
+Performance
+
+Property discovery queries must remain performant even with large datasets.
+
+Search queries may involve:
+
+multiple filtering conditions
+
+attribute filtering
+
+location filtering
+
+pricing filters
+
+Data Integrity
+
+The system must enforce:
+
+correct attribute validation
+
+correct relationships between domain entities
+
+consistent offering definitions
+
+Flexibility
+
+The model must allow:
+
+new asset types
+
+new transaction types
+
+new business verticals
+
+new investment products
+
+without major schema redesign.
+
+Maintainability
+
+The domain model should be easy for developers to understand and extend.
+
+Clear separation of concerns is important.
+
+11. Open Architecture Questions
+
+We are looking for architectural guidance on several key design questions.
+
+1. Asset Modeling Strategy
+
+What is the best way to model real estate assets in a scalable and flexible way?
+
+Possible strategies include:
+
+hierarchical relational modeling
+
+graph-like relationships
+
+composite asset modeling
+
+other approaches used in enterprise real estate platforms
+
+We are open to novel modeling approaches if they provide benefits.
+
+2. Attribute Modeling Strategy
+
+Given the large variation in attributes across verticals, what approach would you recommend?
+
+Options may include:
+
+normalized attribute tables
+
+JSON attribute storage
+
+vertical-specific tables
+
+hybrid approaches
+
+The design should balance:
+
+performance
+
+validation
+
+extensibility
+
+3. Offering and Transaction Modeling
+
+What is the best domain model for representing multiple commercial offerings tied to the same asset?
+
+The model should support:
+
+lease offerings
+
+sale offerings
+
+investment offerings
+
+future fractional investment products
+
+4. CRM Integration Architecture
+
+What is the recommended architecture for integrating the backend platform with Zoho CRM?
+
+Considerations include:
+
+webhook ingestion
+
+API synchronization
+
+conflict resolution
+
+data ownership boundaries
+
+5. Future Investment Products
+
+The platform may eventually support:
+
+fractional ownership
+
+investment portfolios
+
+REIT-like structures
+
+How should the architecture prepare for this future evolution?
+
+12. Deliverables Requested
+
+We are looking for recommendations on:
+
+A domain-driven architecture approach
+
+A scalable database modeling strategy
+
+Recommended entity structures
+
+CRM integration architecture
+
+Performance considerations
+
+Potential pitfalls to avoid
+
+13. Goal of This Exercise
+
+The goal is to design a clean, scalable architecture that can evolve into a full commercial real estate operating platform.
+
+We are particularly interested in well-structured domain modeling and data architecture suitable for long-term growth.
