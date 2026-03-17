@@ -1,8 +1,0 @@
-shared_office_basic {
-  center_name string             
-  brand_name string                
-  operator_name string
-  center_code string
-  launch_date date
-  total_capacity_seats int
-}

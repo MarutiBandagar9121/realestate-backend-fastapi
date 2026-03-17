@@ -6,7 +6,7 @@ def freezereq(c):
 
 @task
 def dev(c):
-    c.run("uvicorn main:app --reload --port 7000")
+    c.run("uvicorn main:app --reload --port 8000")
 
 @task
 def migrate(c, msg):

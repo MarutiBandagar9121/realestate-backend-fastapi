@@ -1,0 +1,312 @@
+// ───────────────────────────────────────
+// ENUMS
+// ───────────────────────────────────────
+
+enum property_type_enum {
+  COMMERCIAL_SPACE
+  RETAIL
+  INDUSTRIAL
+  LOGISTICS
+  LAND
+}
+
+enum node_type_enum {
+  BUILDING
+  WING
+  FLOOR
+  UNIT
+  LAND
+  INDUSTRIAL
+  LOGISTICS
+  RETAIL_UNIT
+  SHARED_OFFICE
+
+}
+
+enum offering_type_enum {
+  LEASE
+  SALE
+  FRACTIONAL
+  COWORKING
+}
+
+enum offering_status_enum {
+  ACTIVE
+  UNDER_OFFER
+  CLOSED
+  WITHDRAWN
+}
+
+enum party_type_enum {
+  DEVELOPER
+  INDIVIDUAL_OWNER
+  CORPORATE_OWNER
+  INVESTOR
+  OPERATOR
+}
+
+enum coworking_product_type_enum {
+  HOT_DESK
+  DEDICATED_DESK
+  PRIVATE_CABIN
+  MEETING_ROOM
+  MANAGED_OFFICE
+  VIRTUAL_OFFICE
+}
+
+// ───────────────────────────────────────
+// LOOKUP / CONFIG TABLES
+// ───────────────────────────────────────
+
+property_type {
+  id int pk
+  name string
+}
+
+property_node_type {
+  id int pk
+  name string
+}
+
+property_type_config {
+  id int pk
+  property_type_id int fk
+  allowed_node_types string
+  requires_nodes boolean
+  description string
+}
+
+// ───────────────────────────────────────
+// CORE — PROPERTY & NODE TREE
+// ───────────────────────────────────────
+
+property {
+  id string pk
+  name string
+  property_type_id int fk
+  city_id int fk
+  location_id int fk
+  sublocation_id int fk
+  latitude double
+  longitude double
+  google_map_url string
+  ownership_type string
+  operator_id string fk
+  status string
+  created_at timestamp
+  updated_at timestamp
+}
+
+property_node {
+  id string pk
+  node_name string
+  property_id string fk
+  node_type_id int fk
+  parent_node_id string fk
+  sequence_order int
+  status string
+  created_at timestamp
+  updated_at timestamp
+}
+
+// ───────────────────────────────────────
+// NODE DETAIL TABLES
+// ───────────────────────────────────────
+
+building_details {
+  id string pk
+  node_id string fk
+  building_name string
+  grade string
+  year_built int
+  total_area float
+  total_area_unit string
+  power_backup boolean
+  green_rating string
+  parking_ratio string
+}
+
+wing_details {
+  id string pk
+  node_id string fk
+  wing_name string
+  area float
+  area_unit string
+  independent_entrance boolean
+  wing_type string
+}
+
+floor_details {
+  id string pk
+  node_id string fk
+  floor_index int
+  floor_name string
+  carpet_area float
+  chargeable_area float
+  area_unit string
+  column_free boolean
+  ceiling_height_ft float
+}
+
+unit_details {
+  id string pk
+  node_id string fk
+  owner_id string fk
+  unit_name string
+  carpet_area float
+  chargeable_area float
+  area_unit string
+  fit_out_type string
+  unit_category string
+}
+
+land_details {
+  id string pk
+  node_id string fk
+  land_area float
+  area_unit string
+  land_type string
+  zone_classification string
+  road_facing boolean
+}
+
+industrial_details {
+  id string pk
+  node_id string fk
+  industrial_type string
+  plot_area float
+  built_up_area float
+  clear_height_ft float
+  floor_load_capacity float
+  power_load_kva int
+  crane_capacity_tons float
+}
+
+logistics_details {
+  id string pk
+  node_id string fk
+  warehouse_area float
+  clear_height_ft float
+  dock_levelers int
+  temperature_controlled boolean
+  truck_turning_radius float
+  area_unit string
+}
+
+// ───────────────────────────────────────
+// OFFERINGS — BASE + EXTENSIONS
+// ───────────────────────────────────────
+
+offering {
+  id string pk
+  node_id string fk
+  property_id string fk
+  offering_type string
+  status string
+  available_from date
+  created_at timestamp
+  updated_at timestamp
+}
+
+offering_lease_detail {
+  id string pk
+  offering_id string fk
+  rent float
+  rent_unit string
+  tenure_months int
+  lock_in_months int
+  notice_period_days int
+  fit_out_type string
+}
+
+offering_sale_detail {
+  id string pk
+  offering_id string fk
+  total_price float
+  price_per_sqft float
+  currency string
+  payment_terms string
+}
+
+offering_fractional_detail {
+  id string pk
+  offering_id string fk
+  total_valuation float
+  min_investment float
+  expected_yield_pct float
+  investment_tenure_months int
+  total_units int
+  available_units int
+}
+
+// ───────────────────────────────────────
+// COWORKING
+// ───────────────────────────────────────
+
+coworking_product {
+  id string pk
+  node_id string fk
+  property_id string fk
+  product_type string
+  name string
+  total_count int
+  available_count int
+  price_amount float
+  price_unit string
+  min_commitment int
+  commitment_unit string
+  notice_period_days int
+  status string
+}
+
+// ───────────────────────────────────────
+// PARTIES — PEOPLE & ORGANISATIONS
+// ───────────────────────────────────────
+
+party {
+  id string pk
+  name string
+  party_type string
+  phone string
+  email string
+  zoho_crm_id string
+  created_at timestamp
+  updated_at timestamp
+}
+
+// ───────────────────────────────────────
+// RELATIONS
+// ───────────────────────────────────────
+
+// Property core
+property_type.id < property.property_type_id
+property_type.id < property_type_config.property_type_id
+
+// Node tree
+property.id < property_node.property_id
+property_node_type.id < property_node.node_type_id
+property_node.id < property_node.parent_node_id
+
+// Node details (each node has exactly one detail record)
+property_node.id - building_details.node_id
+property_node.id - wing_details.node_id
+property_node.id - floor_details.node_id
+property_node.id - unit_details.node_id
+property_node.id - land_details.node_id
+property_node.id - industrial_details.node_id
+property_node.id - logistics_details.node_id
+
+// Offerings
+property_node.id < offering.node_id
+property.id < offering.property_id
+offering.id - offering_lease_detail.offering_id
+offering.id - offering_sale_detail.offering_id
+offering.id - offering_fractional_detail.offering_id
+
+// Coworking
+property_node.id < coworking_product.node_id
+property.id < coworking_product.property_id
+
+// Parties
+party.id < property.operator_id
+party.id < unit_details.owner_id
