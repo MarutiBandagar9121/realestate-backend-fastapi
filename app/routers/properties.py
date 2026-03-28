@@ -1,15 +1,15 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.schemas.property import PropertyCreate, PropertyUpdate, PropertyResponse
+from app.schemas.property import PropertyCreate, PropertyListResponse, PropertyTypeModel, PropertyUpdate, PropertyResponse
 from app.services import property_service
 
 router = APIRouter(prefix="/properties", tags=["Properties"])
 
-
+# upload property
 @router.post("/", response_model=PropertyResponse, status_code=status.HTTP_201_CREATED)
 def create_property(data: PropertyCreate, db: Session = Depends(get_db)):
     try:
@@ -17,6 +17,7 @@ def create_property(data: PropertyCreate, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
+# upload properties bulk
 @router.post("/bulk", response_model=list[PropertyResponse], status_code=status.HTTP_201_CREATED)
 def create_properties_bulk(data: list[PropertyCreate], db: Session = Depends(get_db)):
     try:
@@ -24,10 +25,35 @@ def create_properties_bulk(data: list[PropertyCreate], db: Session = Depends(get
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-
-@router.get("/", response_model=list[PropertyResponse])
-def list_properties(skip: int = 0, limit: int = 20, db: Session = Depends(get_db)):
-    return property_service.get_properties(db, skip=skip, limit=limit)
+# Get all Property types
+@router.get("/types", response_model=list[PropertyTypeModel])
+def getPropertyTypes(db: Session = Depends(get_db)):
+    try:
+        return property_service.get_property_types(db)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+    
+# Get all properties (paginated, with optional filters)
+@router.get("/", response_model=PropertyListResponse)
+def list_properties(
+    skip: int = 0,
+    limit: int = 20,
+    city_ids: list[int] = Query(default=[]),
+    location_ids: list[int] = Query(default=[]),
+    property_type_ids: list[int] = Query(default=[]),
+    db: Session = Depends(get_db),
+):
+    return property_service.get_properties(
+        db,
+        skip=skip,
+        limit=limit,
+        city_ids=city_ids or None,
+        location_ids=location_ids or None,
+        property_type_ids=property_type_ids or None,
+    )
 
 
 @router.get("/{property_id}", response_model=PropertyResponse)

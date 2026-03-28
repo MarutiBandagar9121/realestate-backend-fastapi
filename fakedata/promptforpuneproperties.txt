@@ -1,0 +1,137 @@
+here is my model schema to uplad properties,
+`class PropertyCreate(BaseModel):
+    project_name: str
+    project_grade: str
+    city_id: int
+    location_id: int
+    sublocation_id: int
+    latitude: float
+    longitude: float
+    google_map_url: str
+    address_line1: str
+    address_line2: Optional[str] = None
+    total_property_area: float
+    total_property_area_unit: str
+    property_sanction_type: str
+    tenant_profile: Optional[str] = None
+    property_type_id: int`
+I want to create an dummy test data to test my api, Can You please do that for me.
+Considering this schema, generate an single json file to load up 100 properties please.
+Make sure the data is indian. Take any random data.
+for city id use 1
+for locations in city 1(pune) use these locations,
+`1	"Hinjewadi"	1	"Peripheral"	"West Pune"
+2	"Wakad"	1	"Secondary"	"West Pune"
+3	"Bavdhan"	1	"Peripheral"	"West Pune"
+4	"Chinchwad"	1	"Peripheral"	"West Pune"
+5	"Balewadi"	1	"Secondary"	"West Pune"
+6	"Pashan"	1	"Secondary"	"West Pune"
+7	"Baner"	1	"Secondary"	"West Pune"
+8	"Kothrud"	1	"Secondary"	"West Pune"
+9	"Pimpri"	1	"Peripheral"	"West Pune"
+10	"Aundh"	1	"Secondary"	"West Pune"
+11	"Erandwane"	1	"Secondary"	"West Pune"
+12	"Khadki"	1	"Secondary"	"West Pune"
+13	"Shivaji Nagar"	1	"Secondary"	"West Pune"
+14	"Peth Area"	1	"Secondary"	"West Pune"
+15	"Bund Garden"	1	"Secondary"	"West Pune"
+16	"Yerawada"	1	"Secondary"	"West Pune"
+17	"Koregaon Park"	1	"Secondary"	"West Pune"
+18	"Kalyani Nagar"	1	"Secondary"	"West Pune"
+19	"Viman Nagar"	1	"Secondary"	"West Pune"
+20	"Wanowrie"	1	"Secondary"	"West Pune"
+21	"Kharadi"	1	"Secondary"	"West Pune"
+22	"Hadapsar"	1	"Secondary"	"West Pune"
+23	"Wagholi"	1	"Secondary"	"West Pune"
+24	"Swargate"	1	"Secondary"	"West Pune"
+25	"Kondhwa"	1	"Secondary"	"West Pune"`
+
+and use these sublocations,
+`1	"Phase 1"	1
+2	"Phase 2"	1
+3	"Phase 3"	1
+4	"Aundh Hinjewadi Road"	2
+5	"Pimple Saudagar"	2
+6	"Pimple Nilakh"	2
+7	"Pimple Garav"	2
+8	"Tathawade"	2
+9	"Ravet"	2
+10	"Bhugaon"	3
+11	"NDA Pashan Road"	3
+12	"Akurdi"	4
+13	"Nigdi"	4
+14	"Talwade"	4
+15	"Cummins India Road"	5
+16	"Mahalunge"	5
+17	"Pashan Sus Road"	6
+18	"Baner Road"	7
+19	"Mum-Bang Highway"	7
+20	"Karve Nagar"	8
+21	"Paud Road"	8
+22	"Chandni Chowk"	8
+23	"Sinhagad Road"	8
+24	"Nanded"	8
+25	"Warje"	8
+26	"Kasarwadi"	9
+27	"Bhosari"	9
+28	"Moshi"	9
+29	"ITI Road"	10
+30	"University Road"	10
+31	"Bapodi"	10
+32	"Prabhat Road"	11
+33	"Law College Road"	11
+34	"Khadki"	12
+35	"Wakdewadi"	13
+36	"S B Road"	13
+37	"Model Colony"	13
+38	"FC Road"	13
+39	"JM Road"	13
+40	"Bhandarkar Road"	13
+41	"Ganeshkhind Road"	13
+42	"Sadashiv Peth"	14
+43	"Raviwar Peth"	14
+44	"Mangalwar Peth"	14
+45	"Agarkar Nagar"	14
+46	"Budhwar Peth"	14
+47	"Pune Contonment"	14
+48	"Sangamvadi"	15
+49	"Camp"	15
+50	"Vishrant Wadi"	16
+51	"Tingre Nagar"	16
+52	"Golf Club Road"	16
+53	"North Main Road"	17
+54	"Mundhwa"	17
+55	"Kalyani Nagar"	18
+56	"Wadgaon Sheri"	19
+57	"Ramwadi"	19
+58	"Wanowrie"	20
+59	"Eon Free Zone"	21
+60	"Grant Road"	21
+61	"Kharadi Mundhwa Road"	21
+62	"Magarpatta"	22
+63	"Amanora"	22
+64	"Fursungi"	22
+65	"Solapur Road"	22
+66	"Wagholi"	23
+67	"Gultekdi"	24
+68	"Bibwewadi"	24
+69	"Katraj"	24
+70	"Shankar Sheth Road"	24
+71	"Nimb"	25
+72	"Undri"	25
+73	"Lulla Nagar"	25`
+
+and here is my property types,
+`1	"Office_Commercial_Space"
+2	"Standalone_Retail"
+3	"Mall"
+4	"Land"
+5	"Logistics"
+6	"Industrial"`
+
+use Sq.ft for area thing
+
+
+create an single json payload that I can attach to bulk property upload route.
+thanks
+

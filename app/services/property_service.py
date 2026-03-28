@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy.orm import Session, selectinload
-from sqlalchemy import select
+from sqlalchemy import select, func
 
 from app.models.properties import Property, City, Location, Sublocation, PropertyType
 from app.schemas.property import PropertyCreate, PropertyUpdate
@@ -49,19 +49,45 @@ def get_property(db: Session, property_id: UUID) -> Property | None:
     return _load_property(db, property_id)
 
 
-def get_properties(db: Session, skip: int = 0, limit: int = 20) -> list[Property]:
-    stmt = (
-        select(Property)
-        .options(
-            selectinload(Property.city),
-            selectinload(Property.location),
-            selectinload(Property.sublocation),
-            selectinload(Property.property_type),
-        )
-        .offset(skip)
-        .limit(limit)
+def get_properties(
+    db: Session,
+    skip: int = 0,
+    limit: int = 20,
+    city_ids: list[int] | None = None,
+    location_ids: list[int] | None = None,
+    property_type_ids: list[int] | None = None,
+) -> dict:
+    # Start with base statements — one for data, one for count
+    data_stmt = select(Property).options(
+        selectinload(Property.city),
+        selectinload(Property.location),
+        selectinload(Property.sublocation),
+        selectinload(Property.property_type),
     )
-    return list(db.execute(stmt).scalars().all())
+    count_stmt = select(func.count()).select_from(Property)
+    print("Request to get all properties received")
+    if city_ids is not None:
+        print("city_ids"+str(city_ids))
+    if location_ids is not None:
+        print("location_ids"+str(location_ids))
+    if(property_type_ids is not None):
+        print("property_type_ids"+str(property_type_ids))
+
+    # Apply the same filters to both statements
+    if city_ids:
+        data_stmt = data_stmt.where(Property.city_id.in_(city_ids))
+        count_stmt = count_stmt.where(Property.city_id.in_(city_ids))
+    if location_ids:
+        data_stmt = data_stmt.where(Property.location_id.in_(location_ids))
+        count_stmt = count_stmt.where(Property.location_id.in_(location_ids))
+    if property_type_ids:
+        data_stmt = data_stmt.where(Property.property_type_id.in_(property_type_ids))
+        count_stmt = count_stmt.where(Property.property_type_id.in_(property_type_ids))
+
+    total = db.execute(count_stmt).scalar_one()
+    items = list(db.execute(data_stmt.offset(skip).limit(limit)).scalars().all())
+
+    return {"items": items, "total": total, "skip": skip, "limit": limit}
 
 
 def create_property(db: Session, data: PropertyCreate) -> Property:
@@ -167,3 +193,6 @@ def delete_property(db: Session, property_id: UUID) -> bool:
     db.delete(prop)
     db.commit()
     return True
+
+def get_property_types(db: Session):
+    return db.query(PropertyType).all()

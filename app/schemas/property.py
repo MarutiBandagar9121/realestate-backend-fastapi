@@ -3,6 +3,12 @@ from uuid import UUID
 from pydantic import BaseModel
 from typing import Optional
 
+# Property types
+class PropertyTypeModel(BaseModel):
+    id: int
+    name: str
+
+    model_config = {"from_attributes": True}
 
 # ── Nested reference schemas (used inside responses) ─────────────────────────
 
@@ -96,3 +102,14 @@ class PropertyResponse(BaseModel):
     tenant_profile: Optional[str]
 
     model_config = {"from_attributes": True}
+
+
+# ── Paginated list response ───────────────────────────────────────────────────
+
+class PropertyListResponse(BaseModel):
+    items: list[PropertyResponse]
+    total: int
+    skip: int
+    limit: int
+
+
